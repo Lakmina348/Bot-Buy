@@ -174,7 +174,7 @@
     cursor: pointer;
     box-shadow: 0 0 25px rgba(255, 136, 0, 0.7);
     transition: transform 0.2s;
-    pointer-events: none;
+    pointer-events: auto;
     z-index: 12;
   }
   .center-play svg { width: 32px; height: 32px; fill: #000; margin-left: 3px; }
@@ -593,6 +593,11 @@
   }
 
   btnPlay.onclick = togglePlay;
+
+  centerPlay.onclick = (e) => {
+    e.stopPropagation();
+    togglePlay();
+  };
 
   let lastTap = 0, tapTimer;
   touchArea.addEventListener('click', (e) => {
