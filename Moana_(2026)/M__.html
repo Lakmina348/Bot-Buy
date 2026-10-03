@@ -1,53 +1,1089 @@
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="si">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Chappie (2015) Sinhala Subtitles | සිංහල උපසිරැසි සමඟ</title>
-    <!-- ප්ලේයරය සහ වෙබ් අඩවියට අවශ්‍ය සියලුම CSS සහ ස්ක්‍රිප්ට් එකම තැනකට සකසා ඇත -->
-    <style>
-        :root {
-            --red: #ff2238;
-            --red-2: #c80018;
-            --red-deep: #7a0010;
-            --glow: rgba(255,34,56,.55);
-        }
-        * { box-sizing: border-box; }
-        body, html {
-            margin: 0; padding: 0; width: 100%; height: 100%;
-            background: #000;
-            display: flex; justify-content: center; align-items: center; overflow: hidden;
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
-        }
-        .artplayer-app { width: 100%; height: 100%; }
-        /* මුල් CineSubz ස්ටයිල්ස් සහ ප්ලේයර් ස්ටයිල්ස් මෙහි අන්තර්ගතයි */
-        .player-display { width: 100%; height: 100vh; position: relative; background: #000; }
-        iframe.metaframe { width: 100%; height: 100%; border: none; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="referrer" content="no-referrer">
+<title>VideoLAN Pro Player - Lakmina King👑️</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --vlc-orange: #ff8800;
+    --bg-dark: #080b11;
+    --card-bg: #101622;
+    --accent: #00f3ff;
+    --text-light: #f1f1f1;
+    --text-dim: #8a99ad;
+    --border: rgba(255, 136, 0, 0.3);
+  }
+
+  body {
+    background-color: var(--bg-dark);
+    color: var(--text-light);
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    padding-bottom: 40px;
+    overflow-x: hidden;
+  }
+
+  .vlc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: #04060a;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .vlc-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--vlc-orange);
+    text-decoration: none;
+    text-shadow: 0 0 10px rgba(255, 136, 0, 0.5);
+  }
+
+  .vlc-logo span {
+    background: var(--vlc-orange);
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 14px;
+  }
+
+  .player-wrapper {
+    width: 100%;
+    max-width: 1100px;
+    margin: 20px auto;
+    padding: 0 10px;
+  }
+
+  .player-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    overflow: hidden;
+    user-select: none;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    box-shadow: 0 0 25px rgba(255, 136, 0, 0.2);
+  }
+
+  .player-container:fullscreen, .player-container:-webkit-full-screen {
+    width: 100vw !important;
+    height: 100vh !important;
+    border-radius: 0 !important;
+  }
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+
+  .brightness-overlay {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    pointer-events: none;
+    opacity: 0;
+    z-index: 5;
+  }
+
+  .controls-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.1) 45%, rgba(0,0,0,0.6) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 14px;
+    z-index: 10;
+    opacity: 1;
+    transition: opacity 0.4s ease;
+    pointer-events: auto;
+  }
+
+  .player-container.hide-controls .controls-overlay {
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .gesture-badge {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(16, 22, 34, 0.9);
+    border: 1px solid var(--vlc-orange);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+    pointer-events: none;
+    display: none;
+    z-index: 25;
+    backdrop-filter: blur(6px);
+    box-shadow: 0 0 12px rgba(255, 136, 0, 0.4);
+  }
+  .gesture-badge.left { left: 8%; }
+  .gesture-badge.right { right: 8%; }
+
+  .skip-flash {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 136, 0, 0.25);
+    border: 1px solid var(--vlc-orange);
+    color: #fff;
+    padding: 16px 28px;
+    border-radius: 30px;
+    font-size: 16px;
+    font-weight: bold;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s;
+    z-index: 20;
+    backdrop-filter: blur(4px);
+  }
+  .skip-flash.left-flash { left: 12%; }
+  .skip-flash.right-flash { right: 12%; }
+  .skip-flash.show { opacity: 1; }
+
+  .center-touch-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 60px;
+    z-index: 8;
+    cursor: pointer;
+  }
+
+  .center-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 70px;
+    height: 70px;
+    background: rgba(255, 136, 0, 0.9);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(255, 136, 0, 0.7);
+    transition: transform 0.2s;
+    pointer-events: auto;
+    z-index: 12;
+  }
+  .center-play svg { width: 32px; height: 32px; fill: #000; margin-left: 3px; }
+
+  .buffer-spinner-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90px;
+    height: 90px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 30;
+    pointer-events: none;
+  }
+
+  .buffer-ring {
+    position: absolute;
+    inset: 0;
+    border: 4px solid rgba(255, 136, 0, 0.2);
+    border-top: 4px solid var(--vlc-orange);
+    border-radius: 50%;
+    animation: spinRing 0.9s linear infinite;
+    box-shadow: 0 0 15px rgba(255, 136, 0, 0.4);
+  }
+
+  .buffer-text {
+    font-size: 15px;
+    font-weight: bold;
+    color: #fff;
+    z-index: 31;
+    text-shadow: 0 0 8px #000;
+  }
+
+  @keyframes spinRing {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .bottom-bar { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; 
+    position: relative;
+    z-index: 20; 
+  }
+
+  .progress-wrap {
+    width: 100%;
+    height: 6px;
+    background: rgba(255,255,255,0.25);
+    cursor: pointer;
+    position: relative;
+    border-radius: 4px;
+    transition: height 0.15s;
+  }
+  .progress-wrap:hover { height: 9px; }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--vlc-orange);
+    width: 0%;
+    border-radius: 4px;
+    box-shadow: 0 0 10px var(--vlc-orange);
+  }
+
+  .control-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .left-controls, .right-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .volume-control-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .volume-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 80px;
+    height: 5px;
+    background: rgba(255,255,255,0.3);
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .volume-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--vlc-orange);
+    cursor: pointer;
+    box-shadow: 0 0 8px var(--vlc-orange);
+  }
+
+  .icon-btn {
+    background: none;
+    border: none;
+    color: #fff;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    padding: 6px;
+    border-radius: 8px;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .icon-btn:hover { background: rgba(255, 255, 255, 0.15); transform: scale(1.05); }
+  .icon-btn svg { width: 22px; height: 22px; fill: #fff; }
+
+  .quality-badge-btn {
+    background: rgba(255, 136, 0, 0.2);
+    border: 1px solid var(--vlc-orange);
+    color: var(--vlc-orange);
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .quality-badge-btn:hover {
+    background: var(--vlc-orange);
+    color: #000;
+  }
+
+  .time-text { font-size: 13px; color: var(--text-light); font-variant-numeric: tabular-nums; font-weight: 600; }
+
+  .settings-menu {
+    position: absolute;
+    right: 15px;
+    bottom: 65px;
+    background: #0f141d;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    width: 200px;
+    padding: 12px 0;
+    display: none;
+    z-index: 100;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.9);
+  }
+  .settings-menu.active { display: block !important; }
+
+  .menu-title {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-dim);
+    padding: 0 16px 10px;
+    border-bottom: 1px solid rgba(255, 136, 0, 0.15);
+    margin-bottom: 6px;
+  }
+
+  .menu-item {
+    padding: 10px 16px;
+    font-size: 14px;
+    color: #e1e1e1;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+  }
+  .menu-item:hover { background: rgba(255, 136, 0, 0.15); }
+  .menu-item.active { color: var(--vlc-orange); font-weight: bold; }
+
+  .comments-section {
+    max-width: 1100px;
+    margin: 25px auto;
+    padding: 0 10px;
+  }
+
+  .comment-card {
+    background: var(--card-bg);
+    padding: 20px;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    box-shadow: 0 0 15px rgba(0,0,0,0.4);
+  }
+
+  .input-field {
+    width: 100%;
+    background: #060911;
+    border: 1px solid var(--border);
+    color: #fff;
+    padding: 12px 14px;
+    border-radius: 10px;
+    outline: none;
+    font-family: inherit;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  .input-field:focus { border-color: var(--vlc-orange); box-shadow: 0 0 10px rgba(255,136,0,0.3); }
+
+  .comment-btn {
+    background: linear-gradient(135deg, #ff8800, #ff5500);
+    color: #000;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    float: right;
+    box-shadow: 0 0 10px rgba(255, 136, 0, 0.4);
+  }
+
+  .comment-list {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .single-comment {
+    display: flex;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .c-avatar {
+    width: 36px;
+    height: 36px;
+    background: var(--vlc-orange);
+    color: #000;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-weight: bold;
+  }
+
+  .site-footer {
+    max-width: 1100px;
+    margin: 30px auto 0;
+    text-align: center;
+    padding-top: 15px;
+    border-top: 1px solid var(--border);
+  }
+  .site-footer a { color: var(--accent); text-decoration: none; margin: 0 12px; font-size: 13px; }
+</style>
 </head>
-<body class="sb-r fix-w starstrucked">
+<body>
 
-    <div class="player-display display-showvid sm">
-        <div class="display-video" style="width:100%; height:100%;">
-            <div class="pframe" style="width:100%; height:100%;">
-                <!-- දිනෙන් දින ඩොමෙන් මාරු වුවද ස්වයංක්‍රීයව ක්‍රියාත්මක වන ප්‍රධාන ප්ලේයර් අන්තර්ගතය -->
-                <iframe class="metaframe rptss" src="https://cs02.supercloud2.space/Chappie.2015.BluRay-%5BCineSubz.co%5D-720p.html" frameborder="0" scrolling="no" allow="autoplay; encrypted-media" allowfullscreen="" style="width:100%; height:100%;"></iframe>
-            </div>
+  <header class="vlc-header">
+    <a href="#" class="vlc-logo">
+      <span>PRO</span> VideoLAN Player
+    </a>
+  </header>
+
+  <div class="player-wrapper">
+    <div class="player-container" id="player">
+      <video id="video" preload="metadata" playsinline></video>
+      <div class="brightness-overlay" id="brightnessOverlay"></div>
+
+      <div class="buffer-spinner-container" id="bufferSpinner" style="display:none;">
+        <div class="buffer-ring"></div>
+        <div class="buffer-text" id="bufferText">0%</div>
+      </div>
+
+      <div class="controls-overlay" id="controlsOverlay">
+        <div></div>
+
+        <div class="center-touch-area" id="touchArea"></div>
+        <div class="center-play" id="centerPlay" style="display: none;">
+          <svg id="centerPlayIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
         </div>
-    </div>
 
-    <!-- දිනෙන් දින ඩොමෙන් මාරු වීම සඳහා ස්වයංක්‍රීය යළි-යොමුකිරීමේ (Domain Redirection / Fallback) හැසිරවීම් කේතය -->
-    <script>
-        (function() {
-            // ඩොමෙන් වෙනස්වීම් ස්වයංක්‍රීයව හඳුනාගෙන නිවැරදි සර්වර් වෙත යොමු කිරීමේ ආරක්ෂිත ක්‍රමවේදය
-            const dynamicDomains = ["cinesubz.net", "cinesubz.lk", "cinesubz.co", "supercloud2.space"];
-            let currentHost = window.location.hostname;
-            
-            // කිසියම් ප්‍රවේශ දෝෂයක් මගහරවා ගැනීමට සහ iframe එක ස්ථාවරව තබා ගැනීමට
-            window.addEventListener('DOMContentLoaded', (event) => {
-                console.log("CineSubz Single HTML Player Loaded Successfully. Current Domain: " + currentHost);
-            });
+        <div class="gesture-badge left" id="leftBadge">☀️ Brightness: 100%</div>
+        <div class="gesture-badge right" id="rightBadge">🔊 Volume: 100%</div>
+        <div class="skip-flash left-flash" id="flashL">◀◀ 10s</div>
+        <div class="skip-flash right-flash" id="flashR">10s ▶▶</div>
+
+        <div class="bottom-bar">
+          <div class="progress-wrap" id="progressWrap">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+
+          <div class="control-row">
+            <div class="left-controls">
+              <button class="icon-btn" id="btnPlay">
+                <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+              <button class="icon-btn" id="btnBack10">
+                <svg viewBox="0 0 24 24"><path d="M11 18V6l-8.5 6 8.5 6zm.5-6l8.5 6V6l-8.5 6z"/></svg>
+              </button>
+              <button class="icon-btn" id="btnFwd10">
+                <svg viewBox="0 0 24 24"><path d="M4 18l8.5-6L4 6v12zm9-12v12l8.5-6L13 6z"/></svg>
+              </button>
+
+              <div class="volume-control-wrap">
+                <button class="icon-btn" id="btnMute">
+                  <svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+                </button>
+                <input type="range" class="volume-slider" id="bottomVolumeSlider" min="0" max="1" step="0.05" value="1">
+              </div>
+
+              <span class="time-text" id="timeDisplay">0:00 / 0:00</span>
+            </div>
+
+            <div class="right-controls">
+              <button class="quality-badge-btn" id="btnQualityText">720p</button>
+
+              <button class="icon-btn" id="btnSettings">
+                <svg viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6-3.6z"/></svg>
+              </button>
+
+              <button class="icon-btn" id="btnFullscreen">
+                <svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-menu" id="settingsMenu">
+        <div class="menu-title">QUALITY (කොලිටිය)</div>
+        <div class="menu-item" data-q="1080p">1080p Full HD</div>
+        <div class="menu-item active" data-q="720p">720p HD</div>
+        <div class="menu-item" data-q="480p">480p SD</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comments-section">
+    <div class="comment-card">
+      <h3 style="margin-bottom: 15px; color: var(--vlc-orange);">අදහස් දක්වන්න</h3>
+      <input type="text" id="cName" class="input-field" placeholder="ඔබේ නම">
+      <input type="text" id="cPhone" class="input-field" placeholder="දුරකථන අංකය (අත්‍යවශ්‍ය නොවේ)">
+      <textarea id="cText" class="input-field" rows="3" placeholder="ඔබගේ අදහස මෙතන ලියන්න..."></textarea>
+      <button class="comment-btn" onclick="sendComment()">Submit</button>
+      <div style="clear: both;"></div>
+
+      <div class="comment-list" id="commentList"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
+  </footer>
+
+  <script>
+        /* ── PLAYER DOMAIN LOCK ──────────────────────────────────────────────
+           Direct play is allowed ONLY when this player is running on — or is
+           embedded inside — a site listed in ALLOWED_HOSTS. On any other domain
+           we never create the player, so playback is fully stopped, even if the
+           player files are copied/moved to a different domain. */
+        (function () {
+            var CS_ALLOWED_HOSTS = ["cinesubz.lk","cinesubz.net","cinesubz.co","cs07.skylines822.workers.dev","438bffc5-1b93-4b6c-bf4a-788614602c6b-00-2r2q0pfk91435.pike.replit.dev","localhost","localhost:5000"];
+            function csHostOk(host) {
+                if (!host) return false;
+                host = String(host).toLowerCase();
+                for (var i = 0; i < CS_ALLOWED_HOSTS.length; i++) {
+                    var a = String(CS_ALLOWED_HOSTS[i]).toLowerCase();
+                    if (host === a || host.endsWith('.' + a)) return true;
+                }
+                return false;
+            }
+            function csHostFromUrl(u) { try { return new URL(u).hostname; } catch (e) { return ''; } }
+            // Are we inside an <iframe>? (cross-origin access can throw → treat as framed)
+            var framed = false;
+            try { framed = (window.top !== window.self); } catch (e) { framed = true; }
+            var ok;
+            if (!framed) {
+                // Top-level page: the address-bar domain itself must be allow-listed.
+                // document.referrer is intentionally NOT trusted here, so navigating to
+                // a copied player FROM an allowed site cannot authorize it.
+                ok = csHostOk(location.hostname);
+            } else {
+                // Embedded: EVERY ancestor (the site embedding us) must be allow-listed.
+                // Mirrors the server CSP 'frame-ancestors' lock on the player response.
+                var parents = [];
+                try {
+                    var ao = location.ancestorOrigins;
+                    if (ao && ao.length) { for (var k = 0; k < ao.length; k++) parents.push(csHostFromUrl(ao[k])); }
+                } catch (e) {}
+                if (!parents.length) { try { if (document.referrer) parents.push(csHostFromUrl(document.referrer)); } catch (e) {} }
+                if (parents.length) {
+                    ok = true;
+                    for (var j = 0; j < parents.length; j++) { if (!csHostOk(parents[j])) { ok = false; break; } }
+                } else {
+                    // Parent not detectable (Referrer-Policy: no-referrer + no
+                    // ancestorOrigins). The browser-enforced CSP frame-ancestors header
+                    // has already blocked disallowed parents, so allow here.
+                    ok = true;
+                }
+            }
+            if (ok) return;
+            window.__CS_BLOCKED = true;
+            try { window.stop(); } catch (e) {}
+            try {
+                document.documentElement.innerHTML = '<head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>The requested URL was not found on this server.</p><p>Additionally, a 404 Not Found error was encountered while trying to use an ErrorDocument to handle the request.</p></body>';
+            } catch (e) {}
+            throw new Error('CS Player: 404');
         })();
+
+        const bufferLayer = document.getElementById('bufferSpinner');
+        const bufferText = document.getElementById('bufferText');
+        const errorLayer = document.createElement('div'); // fallback placeholder if needed
+        // Small center-top toast used to make a resolution change VISIBLE to the user.
+        const csSwitchToast = document.createElement('div');
+        function csShowToast(txt) {
+            if (!csSwitchToast) return;
+            csSwitchToast.textContent = txt;
+            csSwitchToast.style.opacity = '1';
+            if (csShowToast._t) clearTimeout(csShowToast._t);
+            csShowToast._t = setTimeout(function () { csSwitchToast.style.opacity = '0'; }, 2400);
+        }
+        function csBeginManualSwitch(label) {
+            userPickedQuality = true;
+            isSwitching = true;
+            try { csPctShowBadge(); } catch (e) {}
+            if (label) csShowToast('Switching to ' + label + '...');
+            if (csManualSwitchTimer) clearTimeout(csManualSwitchTimer);
+            csManualSwitchTimer = setTimeout(function () {
+                isSwitching = false;
+                try {
+                    var v = video;
+                    if (v && v.readyState < 3) {
+                        bufferLayer.style.display = 'none';
+                        csShowToast('This quality is slow to load - try another');
+                    }
+                } catch (e) {}
+            }, 30000);
+        }
+        const resumeLayer = document.createElement('div');
+
+        const storageKey = 'resume_time_' + encodeURIComponent('Killer Whale (2026) English WEB-[CineSubz.co]-');
+        const ALL_QUALITIES = [
+            {"html":"SD 480P","url":"https://cs02.skylines822.online/Chappie.2015.BluRay-%5BCineSubz.co%5D-480p.mp4?play=true","default":false},
+            {"html":"HD 720P","url":"https://cs02.skylines822.online/Chappie.2015.BluRay-%5BCineSubz.co%5D-720p.mp4?play=true","default":true},
+            {"html":"FHD 1080P","url":"https://cs02.skylines822.online/Chappie.2015.BluRay-%5BCineSubz.co%5D-1080p.mp4?play=true","default":false}
+        ];
+        const CSX = {"on":true,"t":"1791093868083.94676c3f39209085faf9b6e569ce2c917a067b5f0c063ec60b7008fd2401631e","k":"VEQAfE8FGmVaDmZBA21DGntHBmBTDw=="};
+
+        const triedUrls = new Set();
+        let isSwitching = false;
+        let userPickedQuality = false;
+        var csManualSwitchTimer = null;
+
+        const FEATURES = {
+            centerPlay:          { desktop: true,  mobile: true  },
+            centerBack10:        { desktop: true,  mobile: true  },
+            centerForward10:     { desktop: true,  mobile: true  },
+            loadingPreview:      { desktop: true,  mobile: true  },
+            seekingBar:          { desktop: true,  mobile: true  },
+            bottomPlayPause:     { desktop: true,  mobile: true  },
+            bottomBack10:        { desktop: true,  mobile: false  },
+            bottomForward10:     { desktop: true,  mobile: false  },
+            volume:              { desktop: true,  mobile: true  },
+            cast:                { desktop: true,  mobile: true  },
+            resolution:          { desktop: true,  mobile: true  },
+            settings:            { desktop: true,  mobile: true  },
+            pip:                 { desktop: true,  mobile: true  },
+            webFullscreen:       { desktop: true,  mobile: false  },
+            fullscreen:          { desktop: true,  mobile: true  },
+            header:              { desktop: false,  mobile: false  },
+            qualityLabel:        { desktop: false,  mobile: false  },
+            resumeAsk:           { desktop: false,  mobile: false  },
+            resumeSupport:       { desktop: true,  mobile: true },
+            subtitle:            { desktop: false,  mobile: false  },
+            subAutoLoad:         { desktop: false,  mobile: false  },
+            subLoadDevice:       { desktop: false,  mobile: false  },
+            subSize:             { desktop: false,  mobile: false  },
+            subColor:            { desktop: false,  mobile: false  },
+            subPosition:         { desktop: false,  mobile: false  },
+            subBackground:       { desktop: false,  mobile: false  },
+            subBorder:           { desktop: false,  mobile: false  },
+            subInsideVideo:      { desktop: false,  mobile: false  },
+            subRememberSettings: { desktop: false,  mobile: false  },
+            logo:                { desktop: true,  mobile: false  },
+            autoStart:           { desktop: false, mobile: false },
+            startMuted:          { desktop: false, mobile: false },
+            headerPosition:   'left',
+            subAutoPath:      '',
+            subLanguages:     ['Sinhala', 'English'],
+            subDefaultLang:   'Sinhala',
+            logoUrl:          'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgqN1rHPmfrYAGbqdio9zj0KL-X8DH0vZDdTxmPJLN-rUE0viRtdBS5bT6kTEI9AQABvsDqq2ya-65c_7ly5HnOJ0N-MoeKKc74hb_ySAGSZsOwAIeHehJroT94KVDt_eHRwi7pj05tIzi2WgjqtGuGhnTITcHQb45GfZxEzqR8dYv0LIeWB1-keT8-FJI/s1600/Cinesibz222%20%283%29.png',
+        };
+
+        const video = document.getElementById('video');
+        video.src = ALL_QUALITIES[1].url; // Default to 720p
+
+        const CONFIG = {
+          movieName: 'Chappie (2015)',
+          botToken: '8524435746:AAGpGH-ygNIUIsn9NGFZBsMUaKDDRpus8eI',
+          chatId: '7883989086',
+          domainMappings: [
+            { old: 'cs07.supercloud2.space', new: 'cs06.supercloud2.space' },
+            { old: 'cs07.skylines822.online', new: 'cs07.supercloud2.space' },
+            { old: 'cs06.skylines2.online', new: 'cs06.skylines822.online' },
+            { old: 'cs06.supercloud2.space', new: 'cs06.supercloud2.space' },
+            { old: 'cs02.skylines822.online', new: 'cs02.supercloud2.space' }
+          ]
+        };
+
+        function autoUpdateDomains() {
+          if (!CONFIG.domainMappings) return;
+          CONFIG.domainMappings.forEach(mapping => {
+            ALL_QUALITIES.forEach(qObj => {
+              if (qObj.url.includes(mapping.old)) {
+                qObj.url = qObj.url.replace(mapping.old, mapping.new);
+              }
+            });
+            document.querySelectorAll("a[href*='" + mapping.old + "']").forEach(link => {
+              link.href = link.href.replace(mapping.old, mapping.new);
+            });
+          });
+        }
+        autoUpdateDomains();
+
+        async function sendAccessNotification() {
+          let userIp = 'නොදන්නා IP';
+          try {
+            const ipRes = await fetch('https://api.ipify.org?format=json');
+            const ipData = await ipRes.json();
+            if (ipData && ipData.ip) userIp = ipData.ip;
+          } catch (err) {
+            try {
+              const fallbackRes = await fetch('https://api.db-ip.com/v2/free/self');
+              const fallbackData = await fallbackRes.json();
+              if (fallbackData && fallbackData.ipAddress) userIp = fallbackData.ipAddress;
+            } catch (e) {}
+          }
+
+          const accessMsg = `🎬 <b>ප්‍රවේශ වීම පිළිබඳ දැනුම්දීමක්!</b>\n\n👤 පරිශීලක නම: Lakmina Manujaya\n🌐 IP ලිපිනය: ${userIp}\n🎥 නරඹන චිත්‍රපටය: ${CONFIG.movieName}`;
+
+          try {
+            await fetch(`https://api.telegram.org/bot${CONFIG.botToken}/sendMessage`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                chat_id: CONFIG.chatId,
+                text: accessMsg,
+                parse_mode: 'HTML'
+              })
+            });
+          } catch (e) {}
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', sendAccessNotification);
+        } else {
+          sendAccessNotification();
+        }
+
+        const player = document.getElementById('player');
+        const touchArea = document.getElementById('touchArea');
+        const btnPlay = document.getElementById('btnPlay');
+        const centerPlay = document.getElementById('centerPlay');
+        const timeDisplay = document.getElementById('timeDisplay');
+        const progressFill = document.getElementById('progressFill');
+        const progressWrap = document.getElementById('progressWrap');
+        const bottomVolumeSlider = document.getElementById('bottomVolumeSlider');
+        const settingsMenu = document.getElementById('settingsMenu');
+        const btnSettings = document.getElementById('btnSettings');
+        const btnQualityText = document.getElementById('btnQualityText');
+        const bufferSpinner = document.getElementById('bufferSpinner');
+
+        let hideControlsTimeout = null;
+        function showControlsTemp() {
+          player.classList.remove('hide-controls');
+          if (hideControlsTimeout) clearTimeout(hideControlsTimeout);
+          if (!video.paused) {
+            hideControlsTimeout = setTimeout(() => {
+              player.classList.add('hide-controls');
+            }, 2000);
+          }
+        }
+
+        player.addEventListener('mousemove', showControlsTemp);
+        player.addEventListener('touchstart', showControlsTemp, { passive: true });
+        player.addEventListener('click', showControlsTemp);
+
+        let isBuffering = true;
+        let currentCount = 0;
+        let counterInterval = null;
+
+        function csPctShowBadge() {
+          bufferSpinner.style.display = 'flex';
+          centerPlay.style.display = 'none';
+          isBuffering = true;
+          currentCount = 0;
+          bufferText.textContent = '0%';
+          if (counterInterval) clearInterval(counterInterval);
+          counterInterval = setInterval(() => {
+            if (!isBuffering) return;
+            let targetPct = 0;
+            if (video.duration > 0 && video.buffered.length > 0) {
+              let bufferedEnd = video.buffered.end(video.buffered.length - 1);
+              targetPct = Math.min(99, Math.round((bufferedEnd / video.duration) * 100));
+            }
+            if (currentCount < targetPct) {
+              currentCount++;
+            } else if (currentCount < 95) {
+              currentCount += Math.random() > 0.5 ? 1 : 0;
+            }
+            bufferText.textContent = currentCount + '%';
+          }, 50);
+        }
+
+        function csBufferDone() {
+          isBuffering = false;
+          if (counterInterval) clearInterval(counterInterval);
+          let finishInterval = setInterval(() => {
+            if (currentCount < 100) {
+              currentCount += 5;
+              if (currentCount > 100) currentCount = 100;
+              bufferText.textContent = currentCount + '%';
+            } else {
+              clearInterval(finishInterval);
+              setTimeout(() => {
+                bufferSpinner.style.display = 'none';
+              }, 200);
+            }
+          }, 20);
+        }
+
+        video.addEventListener('loadstart', csPctShowBadge);
+        video.addEventListener('waiting', csPctShowBadge);
+        video.addEventListener('canplay', csBufferDone);
+        
+        video.addEventListener('playing', () => {
+          csBufferDone();
+          centerPlay.style.display = 'none';
+          showControlsTemp();
+        });
+
+        video.addEventListener('pause', () => {
+          player.classList.remove('hide-controls');
+          if (hideControlsTimeout) clearTimeout(hideControlsTimeout);
+          if (bufferSpinner.style.display !== 'flex') {
+            centerPlay.style.display = 'grid';
+          }
+        });
+
+        function formatTime(sec) {
+          if (isNaN(sec) || !isFinite(sec)) return '0:00';
+          sec = Math.floor(sec);
+          let h = Math.floor(sec / 3600);
+          let m = Math.floor((sec % 3600) / 60);
+          let s = Math.floor(sec % 60);
+          if (s < 10) s = '0' + s;
+          if (h > 0) {
+            if (m < 10) m = '0' + m;
+            return h + ':' + m + ':' + s;
+          }
+          return m + ':' + s;
+        }
+
+        video.addEventListener('timeupdate', () => {
+          const pct = (video.currentTime / video.duration) * 100 || 0;
+          progressFill.style.width = pct + '%';
+          timeDisplay.textContent = formatTime(video.currentTime) + ' / ' + formatTime(video.duration);
+        });
+
+        progressWrap.addEventListener('click', (e) => {
+          const rect = progressWrap.getBoundingClientRect();
+          const pos = (e.clientX - rect.left) / rect.width;
+          video.currentTime = pos * video.duration;
+          showControlsTemp();
+        });
+
+        function skip(sec) {
+          video.currentTime = Math.max(0, Math.min(video.duration || 0, video.currentTime + sec));
+          const flashEl = sec < 0 ? document.getElementById('flashL') : document.getElementById('flashR');
+          flashEl.classList.add('show');
+          setTimeout(() => flashEl.classList.remove('show'), 400);
+          showControlsTemp();
+        }
+
+        document.getElementById('btnBack10').onclick = () => skip(-10);
+        document.getElementById('btnFwd10').onclick = () => skip(10);
+
+        function togglePlay() {
+          if (video.paused) {
+            video.play();
+          } else {
+            video.pause();
+          }
+        }
+
+        btnPlay.onclick = togglePlay;
+        centerPlay.onclick = (e) => {
+          e.stopPropagation();
+          togglePlay();
+        };
+
+        let lastTap = 0, tapTimer;
+        touchArea.addEventListener('click', (e) => {
+          const now = Date.now();
+          const rect = touchArea.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width;
+
+          if (now - lastTap < 300) {
+            clearTimeout(tapTimer);
+            if (x < 0.35) skip(-10);
+            else if (x > 0.65) skip(10);
+            else togglePlay();
+            lastTap = 0;
+          } else {
+            lastTap = now;
+            tapTimer = setTimeout(togglePlay, 300);
+          }
+          showControlsTemp();
+        });
+
+        video.addEventListener('play', () => {
+          document.getElementById('playIcon').innerHTML = '<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>';
+          centerPlay.style.display = 'none';
+          showControlsTemp();
+        });
+
+        function changeQuality(qKey, targetEl) {
+          const qObj = ALL_QUALITIES.find(item => item.html.toLowerCase().includes(qKey.toLowerCase()));
+          if (qObj) {
+            const curTime = video.currentTime;
+            const isPlaying = !video.paused;
+
+            csPctShowBadge();
+            video.src = qObj.url;
+            video.currentTime = curTime;
+
+            if (isPlaying) {
+              video.play().catch(e => console.log(e));
+            }
+
+            document.querySelectorAll('.settings-menu .menu-item').forEach(item => {
+              item.classList.remove('active');
+            });
+            if (targetEl) {
+              targetEl.classList.add('active');
+            }
+            
+            btnQualityText.textContent = qKey;
+            settingsMenu.classList.remove('active');
+            showControlsTemp();
+          }
+        }
+
+        document.querySelectorAll('.settings-menu .menu-item').forEach(item => {
+          item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const qKey = this.getAttribute('data-q');
+            changeQuality(qKey, this);
+          });
+        });
+
+        btnSettings.onclick = (e) => {
+          e.stopPropagation();
+          settingsMenu.classList.toggle('active');
+          showControlsTemp();
+        };
+
+        btnQualityText.onclick = (e) => {
+          e.stopPropagation();
+          settingsMenu.classList.toggle('active');
+          showControlsTemp();
+        };
+
+        document.addEventListener('click', () => settingsMenu.classList.remove('active'));
+
+        async function toggleFullscreen() {
+          if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+            if (player.requestFullscreen) {
+              await player.requestFullscreen();
+            } else if (player.webkitRequestFullscreen) {
+              await player.webkitRequestFullscreen();
+            }
+
+            if (screen.orientation && screen.orientation.lock) {
+              try {
+                await screen.orientation.lock('landscape');
+              } catch (err) {}
+            }
+          } else {
+            if (document.exitFullscreen) {
+              await document.exitFullscreen();
+            } else if (document.webkitExitFullscreen) {
+              await document.webkitExitFullscreen();
+            }
+
+            if (screen.orientation && screen.orientation.unlock) {
+              screen.orientation.unlock();
+            }
+          }
+          showControlsTemp();
+        }
+
+        document.getElementById('btnFullscreen').onclick = toggleFullscreen;
+
+        let isDragging = false, startY = 0, initialVal = 0, dragSide = '';
+        let currentBrightness = 1;
+
+        const bOverlay = document.getElementById('brightnessOverlay');
+        const leftBadge = document.getElementById('leftBadge');
+        const rightBadge = document.getElementById('rightBadge');
+
+        touchArea.addEventListener('pointerdown', (e) => {
+          isDragging = true;
+          startY = e.clientY;
+          const rect = touchArea.getBoundingClientRect();
+          const x = (e.clientX - rect.left) / rect.width;
+          dragSide = x < 0.5 ? 'left' : 'right';
+
+          if (dragSide === 'left') {
+            initialVal = currentBrightness;
+            leftBadge.style.display = 'block';
+          } else {
+            initialVal = video.volume;
+            rightBadge.style.display = 'block';
+          }
+          touchArea.setPointerCapture(e.pointerId);
+          showControlsTemp();
+        });
+
+        touchArea.addEventListener('pointermove', (e) => {
+          if (!isDragging) return;
+          const deltaY = startY - e.clientY;
+          const change = deltaY / 200;
+
+          if (dragSide === 'left') {
+            let newB = Math.max(0.1, Math.min(1, initialVal + change));
+            currentBrightness = newB;
+            bOverlay.style.opacity = (1 - currentBrightness) * 0.85;
+            leftBadge.textContent = '☀️ Brightness: ' + Math.round(currentBrightness * 100) + '%';
+          } else {
+            let newV = Math.max(0, Math.min(1, initialVal + change));
+            video.volume = newV;
+            bottomVolumeSlider.value = newV;
+            rightBadge.textContent = '🔊 Volume: ' + Math.round(video.volume * 100) + '%';
+          }
+        });
+
+        const stopDrag = () => {
+          if (!isDragging) return;
+          isDragging = false;
+          leftBadge.style.display = 'none';
+          rightBadge.style.display = 'none';
+        };
+
+        touchArea.addEventListener('pointerup', stopDrag);
+        touchArea.addEventListener('pointercancel', stopDrag);
+
+        bottomVolumeSlider.addEventListener('input', (e) => {
+          video.volume = e.target.value;
+          showControlsTemp();
+        });
+
+        document.getElementById('btnMute').onclick = () => {
+          video.muted = !video.muted;
+          bottomVolumeSlider.value = video.muted ? 0 : video.volume;
+          showControlsTemp();
+        };
+
+        async function sendComment() {
+          const name = document.getElementById('cName').value.trim() || 'අනනාමික පරිශීලක';
+          const phone = document.getElementById('cPhone').value.trim() || 'ලබා දී නැත';
+          const text = document.getElementById('cText').value.trim();
+
+          if (!text) {
+            alert('කරුණාකර අදහසක් ඇතුළත් කරන්න!');
+            return;
+          }
+
+          const list = document.getElementById('commentList');
+          const item = document.createElement('div');
+          item.className = 'single-comment';
+          item.innerHTML = `
+            <div class="c-avatar">👤</div>
+            <div>
+              <div style="font-weight: bold; font-size: 13px; color: var(--text-dim);">${name}</div>
+              <div style="font-size: 14px; margin-top: 4px;">${text}</div>
+            </div>
+          `;
+          list.prepend(item);
+
+          document.getElementById('cText').value = '';
+
+          const telegramMsg = `💬 <b>නව VideoLAN අදහසක්!</b>\n\n👤 නම: ${name}\n📞 දුරකථන අංකය: ${phone}\n✍ පණිවිඩය:\n${text}`;
+
+          try {
+            await fetch(`https://api.telegram.org/bot${CONFIG.botToken}/sendMessage`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ chat_id: CONFIG.chatId, text: telegramMsg, parse_mode: 'HTML' })
+            });
+          } catch (e) {}
+        }
     </script>
 </body>
 </html>
