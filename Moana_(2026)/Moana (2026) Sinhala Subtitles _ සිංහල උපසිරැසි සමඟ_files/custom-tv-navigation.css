@@ -1,0 +1,757 @@
+/**
+ * Custom TV Series Episode Navigation Styles
+ * Enhanced navigation with horizontal season buttons and episode controls
+ */
+
+/* Episode Navigation Bar */
+.episode-navigation-bar {
+    background: #1a1a1a;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.current-episode-info {
+    flex: 1;
+}
+
+.show-episode-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #fff;
+}
+
+.now-playing-badge {
+    background: #e50914;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: 700;
+    display: inline-block;
+    margin-left: 10px;
+    cursor: default;
+}
+
+.episode-nav-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.ep-nav-btn {
+    background: #2a2a2a;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.ep-nav-btn:hover {
+    background: #e50914;
+    transform: translateY(-2px);
+}
+
+.ep-nav-btn.all-episodes {
+    background: #333;
+}
+
+.ep-nav-btn.all-episodes:hover {
+    background: #555;
+}
+
+/* Horizontal Season Buttons - Small compact style for all devices */
+.seasons-horizontal-buttons {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: #e50914 #2a2a2a;
+    gap: 6px;
+    padding: 10px 0;
+    justify-content: flex-start;
+}
+
+.seasons-horizontal-buttons::-webkit-scrollbar {
+    height: 3px;
+}
+
+.seasons-horizontal-buttons::-webkit-scrollbar-track {
+    background: #2a2a2a;
+    border-radius: 2px;
+}
+
+.seasons-horizontal-buttons::-webkit-scrollbar-thumb {
+    background: #e50914;
+    border-radius: 2px;
+}
+
+.season-btn {
+    background: #2a2a2a;
+    color: #fff;
+    border: 1px solid transparent;
+    padding: 5px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    min-width: auto;
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+.season-btn:hover {
+    background: #3a3a3a;
+    border-color: #666;
+}
+
+.season-btn.active {
+    background: #e50914;
+    border-color: #e50914;
+    color: #fff;
+}
+
+/* Hide old dropdown */
+.seasons-switch {
+    display: none !important;
+}
+
+/* Episode List Enhancements */
+.episodes-list {
+    display: none;
+}
+
+.episodes-list.active {
+    display: block;
+}
+
+.episode-link {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.episode-link:hover {
+    background: rgba(229, 9, 20, 0.1);
+}
+
+.episodes-list li.active {
+    border-left: 4px solid #e50914;
+    background: rgba(229, 9, 20, 0.15);
+}
+
+/* Content Share Section - Full width visibility */
+.content-share {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    flex-wrap: wrap !important;
+    padding: 20px 0 !important;
+    margin: 20px 0 !important;
+    box-sizing: border-box !important;
+    overflow: visible !important;
+    position: relative !important;
+    clear: both !important;
+    border-top: 2px solid #202020;
+    border-bottom: 2px solid #202020;
+}
+
+.content-share .content-title {
+    display: flex !important;
+    align-items: center !important;
+    margin-right: 15px !important;
+    margin-bottom: 10px !important;
+}
+
+.content-share .content-title .title-head {
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    color: #fff !important;
+}
+
+.content-share .share-count {
+    margin-left: 10px !important;
+    background: #333 !important;
+    padding: 5px 10px !important;
+    border-radius: 15px !important;
+    font-size: 12px !important;
+}
+
+.content-share .share-wrapper {
+    display: flex !important;
+    width: auto !important;
+    flex-grow: 1 !important;
+    overflow: visible !important;
+}
+
+.content-share .share-btn {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.content-share .share-btn li {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+
+.content-share .share-btn li.hide {
+    display: inline-flex !important;
+}
+
+.content-share .share-btn li a {
+    display: inline-flex !important;
+    align-items: center !important;
+    padding: 10px 15px !important;
+    border-radius: 5px !important;
+    color: #fff !important;
+    text-decoration: none !important;
+    transition: opacity 0.3s !important;
+}
+
+.content-share .share-btn li a:hover {
+    opacity: 0.8 !important;
+}
+
+.content-share .share-btn li a .share-txt {
+    margin-left: 8px !important;
+}
+
+.content-share .share-btn li a.fb { background: #4861a3 !important; }
+.content-share .share-btn li a.tw { background: #03a9f4 !important; }
+.content-share .share-btn li a.wa { background: #51ce60 !important; }
+.content-share .share-btn li a.pt { background: #ca212a !important; }
+.content-share .share-btn li a.tb { background: #34526f !important; }
+
+.content-share .share-btn li.share-more {
+    display: none !important;
+}
+
+/* Show poster on mobile - override theme default */
+@media (max-width: 749px) {
+    .content-col.left {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        width: 140px !important;
+        min-width: 140px !important;
+        max-width: 140px !important;
+        margin: 0 auto 15px auto !important;
+        float: none !important;
+        position: relative !important;
+    }
+    
+    .content-poster {
+        display: block !important;
+        visibility: visible !important;
+    }
+    
+    .content-poster img {
+        display: block !important;
+        width: 100% !important;
+        height: auto !important;
+    }
+    
+    .content-info {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    
+    .content-col.right {
+        width: 100% !important;
+    }
+    
+    .content-share {
+        width: 100% !important;
+        padding: 10px 0 !important;
+    }
+    
+    .content-share .share-btn {
+        justify-content: center;
+    }
+}
+
+/* Download Links Section - Modern Card Style */
+.content-links .link-wrapper .links-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.content-links .links-table tbody tr {
+    background: #1a1a1a;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.content-links .links-table tbody tr:hover {
+    background: #222;
+    transform: translateX(5px);
+}
+
+.content-links .links-table tbody tr td {
+    padding: 15px;
+    border: none;
+    vertical-align: middle;
+}
+
+.content-links .links-table tbody tr td:first-child {
+    border-radius: 12px 0 0 12px;
+    width: 70px;
+    text-align: center;
+}
+
+.content-links .links-table tbody tr td:last-child {
+    border-radius: 0 12px 12px 0;
+}
+
+/* Download Icon Circle */
+.download-icon-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: #e50914;
+    border-radius: 50%;
+    color: #fff;
+    font-size: 20px;
+}
+
+.download-icon-circle i {
+    color: #fff;
+}
+
+/* Download Link Title */
+.download-link-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 5px;
+}
+
+/* Download Link Details */
+.download-link-details {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.download-link-details span {
+    margin-right: 5px;
+}
+
+.download-link-details span:not(:last-child)::after {
+    content: "•";
+    margin-left: 8px;
+    color: rgba(255, 255, 255, 0.4);
+}
+
+/* EPISODE PAGE DOWNLOAD BUTTONS - Vertical Layout (Same as Movie) */
+/* Episode Links Container - Vertical Stack */
+.episode-download-links,
+.episode-links-container,
+.links-list {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-top: 20px !important;
+}
+
+/* Episode Download Link Item */
+.download-link-item,
+.episode-download-link-item,
+.links-list li {
+    display: block !important;
+    width: auto !important;
+    list-style: none !important;
+}
+
+/* Episode Download Button - Black/Red/White Style (Same as Movie) */
+.download-button {
+    display: inline-flex !important;
+    align-items: center !important;
+    background: #1a1a1a !important;
+    border: 1px solid #2a2a2a !important;
+    border-radius: 8px !important;
+    padding: 20px !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+    white-space: nowrap !important;
+    color: #fff !important;
+}
+
+.download-button:hover {
+    background: #252525 !important;
+    border-color: #e50914 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3) !important;
+    color: #fff !important;
+}
+
+/* Episode Download Icon - Red Circle (matches movie-download-icon) */
+.download-button .download-icon {
+    width: 50px !important;
+    height: 50px !important;
+    min-width: 50px !important;
+    background: #e50914 !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 15px !important;
+    color: #fff !important;
+    font-size: 20px !important;
+}
+
+.download-button .download-icon i {
+    color: #fff !important;
+}
+
+/* Episode Download Info (matches movie-download-info) */
+.download-button .download-info {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Episode Download Type - White (matches movie-download-type) */
+.download-button .download-type {
+    color: #fff !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    margin-bottom: 5px !important;
+}
+
+/* Episode Download Meta - Gray (matches movie-download-meta) */
+.download-button .download-meta {
+    color: #999 !important;
+    font-size: 14px !important;
+}
+
+/* MOVIE PAGE DOWNLOAD BUTTONS - Vertical Layout */
+/* Movie Links Container - Vertical Stack */
+.movie-links-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 10px !important;
+    margin-top: 20px !important;
+}
+
+/* Movie Download Link Item */
+.movie-download-link-item {
+    display: block !important;
+    width: auto !important;
+}
+
+/* Movie Download Button - Black/Red/White Style */
+.movie-download-button {
+    display: inline-flex !important;
+    align-items: center !important;
+    background: #1a1a1a !important;
+    border: 1px solid #2a2a2a !important;
+    border-radius: 8px !important;
+    padding: 20px !important;
+    text-decoration: none !important;
+    transition: all 0.3s ease !important;
+    white-space: nowrap !important;
+}
+
+.movie-download-button:hover {
+    background: #252525 !important;
+    border-color: #e50914 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3) !important;
+}
+
+/* Movie Download Icon - Red Circle */
+.movie-download-icon {
+    width: 50px !important;
+    height: 50px !important;
+    min-width: 50px !important;
+    background: #e50914 !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-right: 15px !important;
+    color: #fff !important;
+    font-size: 20px !important;
+}
+
+.movie-download-icon i {
+    color: #fff !important;
+}
+
+/* Movie Download Info */
+.movie-download-info {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* Movie Download Type - White */
+.movie-download-type {
+    color: #fff !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    margin-bottom: 5px !important;
+}
+
+/* Movie Download Meta - Gray */
+.movie-download-meta {
+    color: #999 !important;
+    font-size: 14px !important;
+}
+
+/* Episode Download Section Position - Centered on Page */
+.episode-download-section {
+    width: 100% !important;
+    max-width: 800px !important;
+    margin: 20px auto !important;
+    padding: 20px !important;
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    position: relative !important;
+}
+
+.episode-download-section .episode-download-header {
+    text-align: center !important;
+    margin-bottom: 20px !important;
+    width: 100% !important;
+}
+
+.episode-download-section .download-title {
+    color: #fff !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+    margin-bottom: 5px !important;
+    text-align: center !important;
+}
+
+.episode-download-section .download-title i {
+    color: #e50914 !important;
+    margin-right: 10px !important;
+}
+
+.episode-download-section .download-subtitle {
+    color: #999 !important;
+    font-size: 14px !important;
+    text-align: center !important;
+}
+
+.episode-download-section .episode-download-links {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+}
+
+.episode-download-section .download-link-item {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
+
+/* Force all download buttons to center */
+.download-button {
+    margin: 0 auto !important;
+}
+
+/* Center download links container on any page */
+.episode-download-links,
+.download-links-wrapper,
+.links-list {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
+
+.download-link-item {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
+
+/* Now Playing Section - After Episode Navigation */
+.now-playing-section {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    margin-top: 20px !important;
+    padding: 15px !important;
+    width: 100% !important;
+}
+
+.now-playing-label {
+    color: #fff !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+}
+
+.now-playing-button {
+    background: #e50914 !important;
+    color: #fff !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    border-radius: 5px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    cursor: default !important;
+    text-transform: none !important;
+}
+
+/* Hide "Links" text on episode pages */
+.content-links .content-title {
+    display: none !important;
+}
+
+/* Center the entire download section (content-links) on episode pages */
+.episode-download-section {
+    display: flex !important;
+    justify-content: center !important;
+    width: 100% !important;
+}
+
+.episode-download-section .content-links {
+    width: 100% !important;
+    max-width: 800px !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+}
+
+.episode-download-section .links-tabs {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 auto !important;
+    list-style: none !important;
+}
+
+.episode-download-section .links-tabs li {
+    display: inline-block !important;
+    text-align: center !important;
+}
+
+.episode-download-section .links-tabs h1 {
+    margin: 0 !important;
+    font-size: inherit !important;
+}
+
+.episode-download-section .link-wrapper {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+}
+
+/* Fix Download Type Button Styling */
+.episode-download-section .links-tabs h1 {
+    display: inline-block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.episode-download-section .links-tabs a.button-70,
+.episode-download-section .links-tabs .button-70 {
+    display: inline-block !important;
+    background: #e50914 !important;
+    color: #fff !important;
+    padding: 12px 25px !important;
+    border-radius: 8px !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+    font-size: 14px !important;
+    white-space: nowrap !important;
+    box-decoration-break: clone !important;
+    -webkit-box-decoration-break: clone !important;
+    line-height: 1.4 !important;
+}
+
+.episode-download-section .links-tabs li {
+    margin: 5px !important;
+    list-style: none !important;
+}
+
+/* Ensure button text stays on one line */
+.links-tabs a.button-70,
+.links-tabs .button-70,
+.content-links .button-70 {
+    display: inline-block !important;
+    white-space: nowrap !important;
+    background: #e50914 !important;
+    color: #fff !important;
+    padding: 12px 25px !important;
+    border-radius: 8px !important;
+    text-decoration: none !important;
+    font-weight: 600 !important;
+}
+
+/* Add gap between download type buttons - target h1 wrapper elements */
+.links-tabs > h1,
+.content-links .links-tabs > h1,
+.episode-download-section .links-tabs > h1,
+ul.links-tabs > h1 {
+    display: inline-flex !important;
+    margin: 8px 10px !important;
+    padding: 0 !important;
+}
+
+.links-tabs h1 li {
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.content-links .links-tabs,
+.episode-download-section .content-links .links-tabs,
+ul.links-tabs {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 12px !important;
+    justify-content: center !important;
+    align-items: center !important;
+    padding: 10px 0 !important;
+    margin: 0 !important;
+    list-style: none !important;
+}
+
+/* Also add margin to the actual download-button class if it exists */
+.download-button,
+.episode-download-section .download-button,
+a.download-button {
+    margin: 8px !important;
+}

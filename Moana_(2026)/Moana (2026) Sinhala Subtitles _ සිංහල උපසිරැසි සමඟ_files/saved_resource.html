@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moana (2026) - Custom Player</title>
+    <!-- Font Awesome Icons for Player Controls -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #0d0d0d;
+            color: #ffffff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .player-wrapper {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        /* Notice Box */
+        .notice-box {
+            background-color: #1a1800;
+            border: 1px solid #736b00;
+            color: #ffff00;
+            padding: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+
+        /* Video Container */
+        .custom-player {
+            position: relative;
+            width: 100%;
+            background-color: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.7);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .custom-player video {
+            width: 100%;
+            height: auto;
+            display: block;
+            cursor: pointer;
+        }
+
+        /* Controls Overlay Base */
+        .player-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0) 40%, rgba(0,0,0,0.85) 100%);
+            transition: opacity 0.4s ease;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Auto-hide State */
+        .custom-player.controls-hidden .player-overlay {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* Center Action Controls */
+        .center-controls {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            z-index: 2;
+        }
+
+        .center-btn {
+            background: rgba(18, 18, 18, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .center-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: scale(1.1);
+        }
+
+        .center-btn.play-btn {
+            width: 65px;
+            height: 65px;
+            font-size: 24px;
+        }
+
+        .center-btn.skip-btn {
+            width: 50px;
+            height: 50px;
+            font-size: 16px;
+        }
+
+        /* Bottom Controls Bar */
+        .bottom-controls {
+            margin-top: auto;
+            padding: 10px 15px 12px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            z-index: 2;
+        }
+
+        /* Progress Bar Container */
+        .progress-area {
+            position: relative;
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            cursor: pointer;
+            border-radius: 3px;
+            transition: height 0.1s ease;
+        }
+
+        .progress-area:hover {
+            height: 8px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: #ff0000;
+            border-radius: 3px;
+            position: relative;
+        }
+
+        /* Controls Bottom Row */
+        .controls-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+            color: #ddd;
+        }
+
+        .left-controls, .right-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .icon-btn:hover {
+            color: #ff0000;
+        }
+
+        .time-display {
+            font-size: 13px;
+            color: #ccc;
+            font-family: monospace;
+        }
+
+        .quality-badge {
+            border: 1px solid #777;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #fff;
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .brand-logo {
+            font-size: 12px;
+            font-weight: bold;
+            color: #e50914;
+            letter-spacing: 0.5px;
+        }
+
+        /* Quality Buttons Section below video */
+        .quality-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .quality-buttons button {
+            background-color: #2b2b2b;
+            color: #ffffff;
+            border: 1px solid #444;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .quality-buttons button:hover {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+<div class="player-wrapper">
+
+    <!-- Notice Box -->
+    <div class="notice-box">
+        Evo Player දවස් දෙක තුනක් වැඩ කරන්නේ නෑ යාළුවනේ. එකකන් CS Player එකෙන් බලන්න පුළුවන්.
+    </div>
+
+    <!-- Custom Video Player -->
+    <div class="custom-player" id="playerContainer">
+        
+        <video id="mainPlayer" controlsList="nodownload" oncontextmenu="return false;" poster="poster.jpg">
+            <source id="videoSource" src="https://cs07.supercloud2.space/Moana%20(2026)%20English%20WEB-[CineSubz.co]-720p.mp4?play=true" type="video/mp4">
+            Your browser does not support video tag.
+        </video>
+
+        <!-- Player Overlay Controls -->
+        <div class="player-overlay" id="playerOverlay">
+            
+            <!-- Center Controls -->
+            <div class="center-controls">
+                <button class="center-btn skip-btn" id="rewindBtn" title="Rewind 10s">
+                    <i class="fa-solid => fa-rotate-left"></i>
+                    <span style="font-size: 10px; position: absolute; font-weight: bold;">10</span>
+                </button>
+
+                <button class="center-btn play-btn" id="centerPlayBtn" title="Play/Pause">
+                    <i class="fa-solid fa-play" id="centerPlayIcon"></i>
+                </button>
+
+                <button class="center-btn skip-btn" id="forwardBtn" title="Forward 10s">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span style="font-size: 10px; position: absolute; font-weight: bold;">10</span>
+                </button>
+            </div>
+
+            <!-- Bottom Controls -->
+            <div class="bottom-controls">
+                
+                <!-- Progress Bar -->
+                <div class="progress-area" id="progressArea">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+
+                <!-- Bottom Buttons & Meta -->
+                <div class="controls-row">
+                    <div class="left-controls">
+                        <button class="icon-btn" id="bottomPlayBtn"><i class="fa-solid fa-play" id="bottomPlayIcon"></i></button>
+                        <button class="icon-btn" id="bottomRewindBtn"><i class="fa-solid fa-rotate-left"></i></button>
+                        <button class="icon-btn" id="bottomForwardBtn"><i class="fa-solid fa-rotate-right"></i></button>
+                        <button class="icon-btn" id="muteBtn"><i class="fa-solid fa-volume-high" id="volumeIcon"></i></button>
+                        <span class="time-display"><span id="currentTime">00:00</span> / <span id="durationTime">00:00</span></span>
+                    </div>
+
+                    <div class="right-controls">
+                        <span class="brand-logo">CINESUBZ</span>
+                        <span class="quality-badge" id="currentQualityBadge">HD 720P</span>
+                        <button class="icon-btn"><i class="fa-solid fa-gear"></i></button>
+                        <button class="icon-btn" id="fullscreenBtn"><i class="fa-solid fa-expand"></i></button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- External Quality Switcher -->
+    <div class="quality-buttons">
+        <button onclick="changeQuality('https://cs07.supercloud2.space/Moana%20(2026)%20English%20WEB-[CineSubz.co]-480p.mp4?play=true', 'SD 480P')">480p</button>
+        <button onclick="changeQuality('https://cs07.supercloud2.space/Moana%20(2026)%20English%20WEB-[CineSubz.co]-720p.mp4?play=true', 'HD 720P')">720p</button>
+        <button onclick="changeQuality('https://cs07.supercloud2.space/Moana%20(2026)%20English%20WEB-[CineSubz.co]-180p.mp4?play=true', 'FHD 1080P')">1080p</button>
+    </div>
+
+</div>
+
+<script>
+    const container = document.getElementById('playerContainer');
+    const player = document.getElementById('mainPlayer');
+    const overlay = document.getElementById('playerOverlay');
+    
+    const centerPlayBtn = document.getElementById('centerPlayBtn');
+    const centerPlayIcon = document.getElementById('centerPlayIcon');
+    const bottomPlayBtn = document.getElementById('bottomPlayBtn');
+    const bottomPlayIcon = document.getElementById('bottomPlayIcon');
+
+    const rewindBtn = document.getElementById('rewindBtn');
+    const forwardBtn = document.getElementById('forwardBtn');
+    const bottomRewindBtn = document.getElementById('bottomRewindBtn');
+    const bottomForwardBtn = document.getElementById('bottomForwardBtn');
+
+    const progressArea = document.getElementById('progressArea');
+    const progressBar = document.getElementById('progressBar');
+    const currentTimeEl = document.getElementById('currentTime');
+    const durationTimeEl = document.getElementById('durationTime');
+
+    const muteBtn = document.getElementById('muteBtn');
+    const volumeIcon = document.getElementById('volumeIcon');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    const qualityBadge = document.getElementById('currentQualityBadge');
+
+    let hideControlsTimeout = null;
+
+    // --- Play / Pause Logic ---
+    function togglePlay() {
+        if (player.paused) {
+            player.play();
+        } else {
+            player.pause();
+        }
+        resetHideTimer();
+    }
+
+    player.addEventListener('play', () => {
+        centerPlayIcon.className = "fa-solid fa-pause";
+        bottomPlayIcon.className = "fa-solid fa-pause";
+        resetHideTimer();
+    });
+
+    player.addEventListener('pause', () => {
+        centerPlayIcon.className = "fa-solid fa-play";
+        bottomPlayIcon.className = "fa-solid fa-play";
+        showControls();
+    });
+
+    centerPlayBtn.addEventListener('click', (e) => { e.stopPropagation(); togglePlay(); });
+    bottomPlayBtn.addEventListener('click', (e) => { e.stopPropagation(); togglePlay(); });
+    player.addEventListener('click', togglePlay);
+
+    // --- Skip Logic (10s Rewind / Forward) ---
+    function skipTime(seconds) {
+        player.currentTime = Math.min(Math.max(player.currentTime + seconds, 0), player.duration);
+        resetHideTimer();
+    }
+
+    rewindBtn.addEventListener('click', (e) => { e.stopPropagation(); skipTime(-10); });
+    forwardBtn.addEventListener('click', (e) => { e.stopPropagation(); skipTime(10); });
+    bottomRewindBtn.addEventListener('click', (e) => { e.stopPropagation(); skipTime(-10); });
+    bottomForwardBtn.addEventListener('click', (e) => { e.stopPropagation(); skipTime(10); });
+
+    // --- Progress & Time Update ---
+    function formatTime(seconds) {
+        if (isNaN(seconds)) return "00:00";
+        let min = Math.floor(seconds / 60);
+        let sec = Math.floor(seconds % 60);
+        if (sec < 10) sec = `0${sec}`;
+        if (min < 10) min = `0${min}`;
+        return `${min}:${sec}`;
+    }
+
+    player.addEventListener('timeupdate', () => {
+        if (player.duration) {
+            const percent = (player.currentTime / player.duration) * 100;
+            progressBar.style.width = `${percent}%`;
+            currentTimeEl.innerText = formatTime(player.currentTime);
+        }
+    });
+
+    player.addEventListener('loadedmetadata', () => {
+        durationTimeEl.innerText = formatTime(player.duration);
+    });
+
+    progressArea.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const rect = progressArea.getBoundingClientRect();
+        const pos = (e.clientX - rect.left) / rect.width;
+        player.currentTime = pos * player.duration;
+        resetHideTimer();
+    });
+
+    // --- Mute Toggle ---
+    muteBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        player.muted = !player.muted;
+        volumeIcon.className = player.muted ? "fa-solid fa-volume-xmark" : "fa-solid fa-volume-high";
+        resetHideTimer();
+    });
+
+    // --- Fullscreen ---
+    fullscreenBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!document.fullscreenElement) {
+            container.requestFullscreen().catch(err => alert(err.message));
+        } else {
+            document.exitFullscreen();
+        }
+        resetHideTimer();
+    });
+
+    // --- Auto Hide Controls (3-second Inactivity) ---
+    function showControls() {
+        container.classList.remove('controls-hidden');
+    }
+
+    function hideControls() {
+        if (!player.paused) {
+            container.classList.add('controls-hidden');
+        }
+    }
+
+    function resetHideTimer() {
+        showControls();
+        clearTimeout(hideControlsTimeout);
+        if (!player.paused) {
+            hideControlsTimeout = setTimeout(hideControls, 2000); // 3 Seconds
+        }
+    }
+
+    container.addEventListener('mousemove', resetHideTimer);
+    container.addEventListener('touchstart', resetHideTimer);
+
+    // --- Change Quality JS Function ---
+    function changeQuality(newSrc, label) {
+        const currentTime = player.currentTime;
+        const isPaused = player.paused;
+
+        document.getElementById('videoSource').src = newSrc;
+        qualityBadge.innerText = label;
+
+        player.load();
+        player.currentTime = currentTime;
+        if (!isPaused) {
+            player.play();
+        }
+    }
+
+    // Disable Context Menu (Right Click)
+    container.addEventListener('contextmenu', e => e.preventDefault());
+</script>
+
+</body>
+</html>
